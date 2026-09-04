@@ -1,11 +1,18 @@
 
 import { apiRequest } from './api';
 
-export interface BookingRoomInput {
+export type BookingStatus =
+  | 'PENDING'
+  | 'CONFIRMED'
+  | 'CHECKED_IN'
+  | 'CHECKED_OUT'
+  | 'CANCELLED';
+
+export interface CreateBookingRoom {
   roomId: string;
 }
 
-export interface BookingGuestInput {
+export interface CreateBookingGuest {
   fullName: string;
   phone: string;
   nationalId: string;
@@ -14,11 +21,20 @@ export interface BookingGuestInput {
   isPrimary?: boolean;
 }
 
-export interface CreateBookingRequest {
+export interface CreateBookingPayload {
   checkIn: string;
   checkOut: string;
-  rooms: BookingRoomInput[];
-  guests: BookingGuestInput[];
+  rooms: CreateBookingRoom[];
+  guests: CreateBookingGuest[];
+}
+
+export interface BookingRoomType {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number | string;
+  amenities: string[];
+  images: string[];
 }
 
 export interface BookingRoom {
@@ -32,56 +48,81 @@ export interface BookingRoom {
     roomNumber: string;
     floor: number;
     status: string;
-    roomType: {
-      id: string;
-      name: string;
-      description: string | null;
-      price: string;
-      amenities: string[];
-      images: string[];
-    };
+    roomType: BookingRoomType;
   };
 }
 
 export interface BookingGuest {
   id: string;
-  bookingId: string;
   fullName: string;
   phone: string;
   nationalId: string;
   nationality: string;
-  email: string | null;
+  email?: string | null;
   isPrimary: boolean;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
-export interface CreatedBooking {
+export interface BookingPayment {
+  id: string;
+  txRef?: string | null;
+  gatewayReference?: string | null;
+  amount?: number | string;
+  status?: string;
+  paidAt?: string | null;
+}
+
+export interface Booking {
   id: string;
   bookingReference: string;
   customerId: string;
   checkIn: string;
   checkOut: string;
-  status:
-    | 'PENDING'
-    | 'CONFIRMED'
-    | 'CHECKED_IN'
-    | 'CHECKED_OUT'
-    | 'CANCELLED';
-  totalAmount: string;
+  status: BookingStatus;
+  totalAmount: number | string;
+  createdAt?: string;
+  updatedAt?: string;
   rooms: BookingRoom[];
   guests: BookingGuest[];
-  createdAt: string;
-  updatedAt: string;
+  payments: BookingPayment[];
 }
 
 export async function createBooking(
-  data: CreateBookingRequest,
-): Promise<CreatedBooking> {
-  return apiRequest<CreatedBooking>('/bookings', {
+  payload: CreateBookingPayload,
+  accessToken: string,
+): Promise<Booking> {
+  return apiRequest<Booking>('/bookings', {
     method: 'POST',
-    body: JSON.stringify(data),
+    token: accessToken,
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function getMyBookings(
+  accessToken: string,
+): Promise<Booking[]> {
+  return apiRequest<Booking[]>('/bookings/my', {
+    method: 'GET',
+    token: accessToken,
+  });
+}
+
+export async function getMyBooking(
+  id: string,
+  accessToken: string,
+): Promise<Booking> {
+  return apiRequest<Booking>(`/bookings/my/${id}`, {
+    method: 'GET',
+    token: accessToken,
+  });
+}
+
+export async function cancelBooking(
+  id: string,
+  accessToken: string,
+): Promise<Booking> {
+  return apiRequest<Booking>(`/bookings/${id}/cancel`, {
+    method: 'PATCH',
+    token: accessToken,
   });
 }
 

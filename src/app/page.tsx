@@ -1,129 +1,169 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import RoomGrid from '@/src/components/rooms/RoomGrid';
-import RoomSearch from '@/src/components/rooms/RoomSearch';
-
-import {
-  getRooms,
-  type Room,
-} from '@/src/lib/rooms-api';
+import { useAuth } from '@/src/components/auth/AuthProvider';
 
 export default function HomePage() {
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const [loading, setLoading] =
-    useState(true);
-  const [searching, setSearching] =
-    useState(false);
-  const [error, setError] = useState('');
-  const [hasSearched, setHasSearched] =
-    useState(false);
+const { user, isLoading } = useAuth();
 
-  useEffect(() => {
-    async function loadRooms() {
-      try {
-        const data = await getRooms();
+return ( <section className="section"> <div className="container">
+<div
+className="fade-up"
+style={{ maxWidth: 760 }}
+> <span className="badge badge-primary">
+Hotel Booking </span>
 
-        setRooms(data);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : 'Unable to load rooms.',
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
 
-    loadRooms();
-  }, []);
-
-  function handleResults(
-    availableRooms: Room[],
-  ) {
-    setRooms(availableRooms);
-    setHasSearched(true);
-  }
-
-  return (
-    <main className="home-page">
-      <section className="home-hero">
-        <div className="home-hero-content">
-          <p className="eyebrow">
-            Welcome to our hotel
-          </p>
-
-          <h1>
-            Your stay,
-            <br />
-            beautifully simple.
-          </h1>
-
-          <p className="home-hero-description">
-            Discover comfortable rooms, thoughtful
-            amenities, and a stay designed around you.
-          </p>
-        </div>
-
-        <RoomSearch
-          onResults={handleResults}
-          onLoading={setSearching}
-          onError={setError}
-        />
-      </section>
-
-      <section
-        id="rooms"
-        className="rooms-section"
+      <h1
+        className="heading-xl"
+        style={{ marginTop: 18 }}
       >
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">
-              Accommodation
-            </p>
+        {user
+          ? `Welcome back, ${user.fullName}.`
+          : 'Your stay, beautifully simple.'}
+      </h1>
 
-            <h2>
-              {hasSearched
-                ? 'Available rooms'
-                : 'Find your perfect room'}
-            </h2>
-          </div>
+      <p
+        className="text-lead"
+        style={{
+          maxWidth: 680,
+          marginTop: 24,
+        }}
+      >
+        Discover comfortable rooms, check
+        availability, and manage your hotel stay
+        from one simple platform.
+      </p>
 
-          <p>
-            {hasSearched
-              ? 'Rooms available for your selected dates.'
-              : 'Choose from our comfortable rooms and find the right space for your stay.'}
-          </p>
-        </div>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 12,
+          marginTop: 32,
+        }}
+      >
+        <Link
+          href="/rooms"
+          className="btn btn-primary btn-lg"
+        >
+          Explore rooms
+        </Link>
 
-        {searching && (
-          <div className="rooms-loading">
-            <p>
-              Checking room availability...
-            </p>
-          </div>
+        {!isLoading && !user && (
+          <Link
+            href="/register"
+            className="btn btn-secondary btn-lg"
+          >
+            Create account
+          </Link>
         )}
 
-        {!searching && error && (
-          <div className="rooms-error">
-            <p>{error}</p>
-          </div>
+        {!isLoading && user && (
+          <Link
+            href="/account"
+            className="btn btn-secondary btn-lg"
+          >
+            My account
+          </Link>
         )}
+      </div>
+    </div>
 
-        {!loading &&
-          !searching &&
-          !error && (
-            <RoomGrid rooms={rooms} />
-          )}
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns:
+          'repeat(auto-fit,minmax(220px,1fr))',
+        gap: 20,
+        marginTop: 64,
+      }}
+    >
+      <article
+        className="card card-hover"
+        style={{ padding: 24 }}
+      >
+        <span className="badge badge-success">
+          Simple
+        </span>
 
-        {loading && (
-          <div className="rooms-loading">
-            <p>Loading rooms...</p>
-          </div>
-        )}
-      </section>
-    </main>
-  );
+        <h2
+          className="heading-md"
+          style={{ marginTop: 18 }}
+        >
+          Easy booking
+        </h2>
+
+        <p
+          className="text-muted"
+          style={{
+            marginTop: 10,
+            lineHeight: 1.7,
+          }}
+        >
+          Find available rooms and complete your
+          reservation in a few straightforward steps.
+        </p>
+      </article>
+
+      <article
+        className="card card-hover"
+        style={{ padding: 24 }}
+      >
+        <span className="badge badge-primary">
+          Comfortable
+        </span>
+
+        <h2
+          className="heading-md"
+          style={{ marginTop: 18 }}
+        >
+          Quality rooms
+        </h2>
+
+        <p
+          className="text-muted"
+          style={{
+            marginTop: 10,
+            lineHeight: 1.7,
+          }}
+        >
+          Choose from rooms prepared for a
+          comfortable and enjoyable stay.
+        </p>
+      </article>
+
+      <article
+        className="card card-hover"
+        style={{ padding: 24 }}
+      >
+        <span className="badge badge-primary">
+          Secure
+        </span>
+
+        <h2
+          className="heading-md"
+          style={{ marginTop: 18 }}
+        >
+          Secure account
+        </h2>
+
+        <p
+          className="text-muted"
+          style={{
+            marginTop: 10,
+            lineHeight: 1.7,
+          }}
+        >
+          Your authenticated account keeps your
+          bookings and customer information connected.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+);
 }
