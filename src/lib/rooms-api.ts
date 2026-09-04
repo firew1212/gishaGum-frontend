@@ -1,21 +1,21 @@
 import { apiRequest } from './api';
 
-export interface RoomType {
-  id: string;
-  name: string;
-  description: string | null;
-  price: string;
-  amenities: string[];
-  images: string[];
-  createdAt: string;
-  updatedAt: string;
-}
-
 export type RoomStatus =
   | 'AVAILABLE'
   | 'OCCUPIED'
   | 'MAINTENANCE'
   | 'OUT_OF_SERVICE';
+
+export interface RoomType {
+  id: string;
+  name: string;
+  description?: string | null;
+  price: number | string;
+  amenities: string[];
+  images: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 export interface Room {
   id: string;
@@ -23,29 +23,43 @@ export interface Room {
   floor: number;
   status: RoomStatus;
   roomTypeId: string;
-  createdAt: string;
-  updatedAt: string;
   roomType: RoomType;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-export interface CheckAvailabilityParams {
+export interface AvailabilityParams {
   checkIn: string;
   checkOut: string;
   roomTypeId?: string;
 }
 
 export async function getRooms(): Promise<Room[]> {
-  return apiRequest<Room[]>('/rooms');
+  return apiRequest<Room[]>('/rooms', {
+    method: 'GET',
+  });
 }
 
-export async function getRoomById(
-  id: string,
-): Promise<Room> {
-  return apiRequest<Room>(`/rooms/${id}`);
+export async function getRoom(id: string): Promise<Room> {
+  return apiRequest<Room>(`/rooms/${id}`, {
+    method: 'GET',
+  });
+}
+
+export async function getRoomTypes(): Promise<RoomType[]> {
+  return apiRequest<RoomType[]>('/room-types', {
+    method: 'GET',
+  });
+}
+
+export async function getRoomType(id: string): Promise<RoomType> {
+  return apiRequest<RoomType>(`/room-types/${id}`, {
+    method: 'GET',
+  });
 }
 
 export async function checkRoomAvailability(
-  params: CheckAvailabilityParams,
+  params: AvailabilityParams,
 ): Promise<Room[]> {
   const searchParams = new URLSearchParams({
     checkIn: params.checkIn,
@@ -53,17 +67,13 @@ export async function checkRoomAvailability(
   });
 
   if (params.roomTypeId) {
-    searchParams.set(
-      'roomTypeId',
-      params.roomTypeId,
-    );
+    searchParams.set('roomTypeId', params.roomTypeId);
   }
 
   return apiRequest<Room[]>(
     `/availability?${searchParams.toString()}`,
+    {
+      method: 'GET',
+    },
   );
-}
-
-export async function getRoomTypes(): Promise<RoomType[]> {
-  return apiRequest<RoomType[]>('/room-types');
 }

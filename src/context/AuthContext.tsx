@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -9,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 
-import type { AuthUser } from '@/src/lib/auth-api';
+import type { AuthUser } from '@/src/lib/auth';
 
 import {
   clearAuth,
@@ -17,7 +16,7 @@ import {
   saveAuth,
 } from '@/src/lib/auth-storage';
 
-interface AuthContextType {
+interface AuthContextValue {
   user: AuthUser | null;
   isLoading: boolean;
   login: (
@@ -28,56 +27,58 @@ interface AuthContextType {
 }
 
 const AuthContext =
-  createContext<AuthContextType | undefined>(
-    undefined,
-  );
+  createContext<AuthContextValue | null>(null);
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
 
 export function AuthProvider({
   children,
-}: {
-  children: ReactNode;
-}) {
+}: AuthProviderProps) {
   const [user, setUser] =
     useState<AuthUser | null>(null);
 
-  const [isLoading, setIsLoading] =
-    useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const currentUser =
-        getCurrentUser();
+    const restoreAuthentication = () => {
+      try {
+        const currentUser = getCurrentUser();
 
-      setUser(currentUser);
-    } catch (error) {
-      console.error(
-        'Failed to restore authentication:',
-        error,
-      );
+        setUser(currentUser);
+      } catch (error) {
+        console.error(
+          'Failed to restore authentication:',
+          error,
+        );
 
-      clearAuth();
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
+        clearAuth();
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    restoreAuthentication();
   }, []);
 
-  function login(
+  const login = (
     accessToken: string,
-    user: AuthUser,
-  ) {
+    authenticatedUser: AuthUser,
+  ): void => {
     saveAuth(
       accessToken,
-      user,
+      authenticatedUser,
     );
 
-    setUser(user);
-  }
+    setUser(authenticatedUser);
+  };
 
-  function logout() {
+  const logout = (): void => {
     clearAuth();
     setUser(null);
-  }
+  };
 
   return (
     <AuthContext.Provider
@@ -93,13 +94,12 @@ export function AuthProvider({
   );
 }
 
-export function useAuth(): AuthContextType {
-  const context =
-    useContext(AuthContext);
+export function useAuth(): AuthContextValue {
+  const context = useContext(AuthContext);
 
-  if (!context) {
+  if (context === null) {
     throw new Error(
-      'useAuth must be used inside AuthProvider',
+      'useAuth must be used within an AuthProvider.',
     );
   }
 

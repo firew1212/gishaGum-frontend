@@ -1,138 +1,129 @@
-
 'use client';
 
 import Link from 'next/link';
 
 import type { Room } from '@/src/lib/rooms-api';
+import {
+formatPrice,
+getRoomImage,
+getRoomStatusClass,
+getRoomStatusLabel,
+isRoomBookable,
+} from '@/src/lib/room-utils';
 
 interface RoomCardProps {
-  room: Room;
-}
-
-function getStatusLabel(status: Room['status']) {
-  switch (status) {
-    case 'AVAILABLE':
-      return 'Available';
-
-    case 'OCCUPIED':
-      return 'Occupied';
-
-    case 'MAINTENANCE':
-      return 'Maintenance';
-
-    case 'OUT_OF_SERVICE':
-      return 'Out of service';
-
-    default:
-      return status;
-  }
+room: Room;
 }
 
 export default function RoomCard({
-  room,
+room,
 }: RoomCardProps) {
-  const {
-    roomNumber,
-    floor,
-    status,
-    roomType,
-  } = room;
+const image = getRoomImage(
+room.roomType.images,
+);
 
-  const image = roomType.images[0];
+const bookable = isRoomBookable(room);
 
-  return (
-    <article className="room-card">
-      <div className="room-card-image">
-        {image ? (
-          <img
-            src={image}
-            alt={`${roomType.name} room`}
-            loading="lazy"
-          />
-        ) : (
-          <div
-            className="room-card-placeholder"
-            aria-hidden="true"
-          >
-            <span>Hotel Room</span>
-          </div>
-        )}
+return ( <article className="room-card">
+<Link
+href={`/rooms/${room.id}`}
+className="room-card-image-link"
+aria-label={`View ${room.roomType.name}, room ${room.roomNumber}`}
+> <div className="room-card-image">
+{image ? (
+<img
+src={image}
+alt={`${room.roomType.name} room`}
+loading="lazy"
+/>
+) : ( <div
+           className="room-image-placeholder"
+           aria-label="No room image available"
+         > <span aria-hidden="true">🏨</span> <span>No image available</span> </div>
+)}
 
-        <span
-          className={`room-status room-status-${status.toLowerCase()}`}
-        >
-          {getStatusLabel(status)}
-        </span>
+
+      <span
+        className={`room-status ${getRoomStatusClass(
+          room.status,
+        )}`}
+      >
+        {getRoomStatusLabel(room.status)}
+      </span>
+    </div>
+  </Link>
+
+  <div className="room-card-content">
+    <div className="room-card-heading">
+      <div>
+        <p className="room-card-eyebrow">
+          Room {room.roomNumber}
+        </p>
+
+        <h2 className="room-card-title">
+          {room.roomType.name}
+        </h2>
       </div>
 
-      <div className="room-card-content">
-        <div className="room-card-header">
-          <div>
-            <p className="room-card-type">
-              {roomType.name}
-            </p>
+      <div className="room-card-price">
+        <strong>
+          {formatPrice(room.roomType.price)}
+        </strong>
+        <span> / night</span>
+      </div>
+    </div>
 
-            <h3>
-              Room {roomNumber}
-            </h3>
-          </div>
+    {room.roomType.description && (
+      <p className="room-card-description">
+        {room.roomType.description}
+      </p>
+    )}
 
-          <div className="room-card-price">
-            <strong>
-              {roomType.price} ETB
-            </strong>
-            <span>per night</span>
-          </div>
-        </div>
+    {room.roomType.amenities.length > 0 && (
+      <div className="room-card-amenities">
+        {room.roomType.amenities
+          .slice(0, 4)
+          .map((amenity) => (
+            <span
+              key={amenity}
+              className="room-amenity"
+            >
+              {amenity}
+            </span>
+          ))}
 
-        {roomType.description && (
-          <p className="room-card-description">
-            {roomType.description}
-          </p>
-        )}
-
-        <div className="room-card-meta">
-          <span>Floor {floor}</span>
-          <span
-            className="room-card-divider"
-            aria-hidden="true"
-          >
-            •
+        {room.roomType.amenities.length > 4 && (
+          <span className="room-amenity-more">
+            +{room.roomType.amenities.length - 4}
           </span>
-          <span>
-            {roomType.amenities.length} amenities
-          </span>
-        </div>
-
-        {roomType.amenities.length > 0 && (
-          <div
-            className="room-card-amenities"
-            aria-label="Room amenities"
-          >
-            {roomType.amenities
-              .slice(0, 3)
-              .map((amenity) => (
-                <span key={amenity}>
-                  {amenity}
-                </span>
-              ))}
-
-            {roomType.amenities.length > 3 && (
-              <span>
-                +{roomType.amenities.length - 3}
-              </span>
-            )}
-          </div>
         )}
+      </div>
+    )}
 
+    <div className="room-card-footer">
+      <Link
+        href={`/rooms/${room.id}`}
+        className="btn btn-secondary"
+      >
+        View details
+      </Link>
+
+      {bookable ? (
         <Link
           href={`/rooms/${room.id}`}
-          className="room-card-button"
+          className="btn btn-primary"
         >
-          View room
-          <span aria-hidden="true">→</span>
+          Book this room
         </Link>
-      </div>
-    </article>
-  );
+      ) : (
+        <span className="room-unavailable-text">
+          Not currently bookable
+        </span>
+      )}
+    </div>
+  </div>
+</article>
+
+
+);
 }
