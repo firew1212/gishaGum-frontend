@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -16,8 +15,7 @@ export default function Header() {
   const router = useRouter();
   const { user, isLoading, logout } = useAuth();
 
-  const [mobileMenuOpen, setMobileMenuOpen] =
-    useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function closeMobileMenu() {
     setMobileMenuOpen(false);
@@ -32,16 +30,14 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
+        {/* Brand */}
         <Link
           href="/"
           className="site-logo"
           aria-label="Hotel Booking home"
           onClick={closeMobileMenu}
         >
-          <span
-            className="site-logo-mark"
-            aria-hidden="true"
-          >
+          <span className="site-logo-mark" aria-hidden="true">
             H
           </span>
 
@@ -50,6 +46,7 @@ export default function Header() {
           </span>
         </Link>
 
+        {/* Navigation */}
         <nav
           id="primary-navigation"
           className={`site-nav ${
@@ -70,30 +67,40 @@ export default function Header() {
             ))}
           </div>
 
+          {/* Account actions */}
           <div className="site-nav-actions">
             {isLoading ? (
-              <span
-                className="text-muted"
-                style={{ fontSize: '.875rem' }}
-              >
+              <span className="header-loading">
+                <span className="header-loading-dot" />
                 Loading...
               </span>
             ) : user ? (
               <>
                 <Link
-                  href="/account"
-                  className="header-login-link"
-                  onClick={closeMobileMenu}
-                >
-                  {user.fullName}
-                </Link>
+  href="/account"
+  className="header-account-link"
+  onClick={closeMobileMenu}
+>
+  <span
+    className="header-user-avatar"
+    aria-hidden="true"
+  >
+    {(user.fullName ?? 'U').charAt(0).toUpperCase()}
+  </span>
+
+  <span className="header-user-name">
+    {user.fullName ?? 'Account'}
+  </span>
+</Link>
 
                 <button
                   type="button"
                   className="btn btn-primary header-register-button"
                   onClick={handleLogout}
                 >
-                  Log out
+                  <Link href={"/login"} >
+                     Log out
+                  </Link>
                 </button>
               </>
             ) : (
@@ -118,6 +125,7 @@ export default function Header() {
           </div>
         </nav>
 
+        {/* Mobile menu */}
         <button
           type="button"
           className={`mobile-menu-button ${
@@ -146,4 +154,3 @@ export default function Header() {
     </header>
   );
 }
-
