@@ -149,7 +149,7 @@ export default function LoginPage() {
 
               <div>
                 <strong>
-                  We couldn't sign you in.
+                  We couldn&apos;t sign you in.
                 </strong>
 
                 <p>{error}</p>

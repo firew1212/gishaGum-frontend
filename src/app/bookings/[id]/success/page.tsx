@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
+import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 
 import {
   getMyBooking,
@@ -20,6 +21,14 @@ import {
 } from '@/src/lib/booking-utils';
 
 export default function BookingSuccessPage() {
+  return (
+    <ProtectedRoute>
+      <BookingSuccessContent />
+    </ProtectedRoute>
+  );
+}
+
+function BookingSuccessContent() {
   const params = useParams<{ id: string }>();
 
   const { accessToken, isAuthenticated, isLoading: authLoading } =

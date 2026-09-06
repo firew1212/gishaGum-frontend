@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
+import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 import {
 getRoom,
 type Room,
@@ -17,6 +18,14 @@ isRoomBookable,
 } from '@/src/lib/room-utils';
 
 export default function RoomDetailsPage() {
+return (
+<ProtectedRoute>
+<RoomDetailsContent />
+</ProtectedRoute>
+);
+}
+
+function RoomDetailsContent() {
 const params = useParams<{
 id: string;
 }>();
@@ -94,8 +103,8 @@ style={{ maxWidth: 760 }}
 > <div
          className="rooms-alert"
          role="alert"
-       > <strong>
-We couldn't load this room. </strong>
+      > <strong>
+    We couldn&apos;t load this room. </strong>
 
 
         <p>

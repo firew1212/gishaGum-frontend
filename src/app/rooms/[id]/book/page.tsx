@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
+import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 import BookingForm from '@/src/components/bookings/BookingForm';
 import {
   getRoom,
@@ -12,6 +13,14 @@ import {
 import type { Room } from '@/src/lib/rooms-api';
 
 export default function BookRoomPage() {
+  return (
+    <ProtectedRoute>
+      <BookRoomContent />
+    </ProtectedRoute>
+  );
+}
+
+function BookRoomContent() {
   const params =
     useParams<{ id: string }>();
 
@@ -146,7 +155,7 @@ export default function BookRoomPage() {
 
             <div>
               <strong>
-                We couldn't load this room.
+                We couldn&apos;t load this room.
               </strong>
 
               <p>

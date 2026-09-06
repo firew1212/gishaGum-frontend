@@ -1,50 +1,79 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 
-import { useAuth } from '@/src/components/auth/AuthProvider';
+import { useAuth } from "@/src/components/auth/AuthProvider";
 
-const hotelFeatures = [
+const roomHighlights = [
   {
-    icon: '⌂',
-    title: 'Comfortable rooms',
-    description:
-      'Relax in thoughtfully prepared rooms designed for a pleasant stay.',
+    image: "/images/gishgum-hotel-room.jpg",
+    name: "Standard Room",
+    description: "A comfortable space for peaceful stays.",
+    price: "ETB 1,500",
   },
   {
-    icon: '✦',
-    title: 'Warm hospitality',
-    description:
-      'Enjoy a welcoming experience with service focused on your comfort.',
+    image: "/images/gishgum-hotel-room.jpg",
+    name: "Deluxe Room",
+    description: "More space, modern comfort, and relaxation.",
+    price: "ETB 2,000",
   },
   {
-    icon: '◉',
-    title: 'Simple booking',
-    description:
-      'Check availability and reserve your room through a simple process.',
+    image: "/images/gishgum-hotel-room.jpg",
+    name: "Executive Suite",
+    description: "Premium comfort for a memorable experience.",
+    price: "ETB 3,000",
+  },
+  {
+    image: "/images/gishgum-hotel-room.jpg",
+    name: "Family Room",
+    description: "Designed for families and shared moments.",
+    price: "ETB 2,800",
+  },
+];
+
+const experiences = [
+  {
+    number: "01",
+    icon: "▱",
+    title: "Comfortable Stay",
+    description: "Rest in welcoming spaces prepared for your comfort.",
+  },
+  {
+    number: "02",
+    icon: "♨",
+    title: "Delicious Dining",
+    description: "Enjoy fresh meals and a warm dining atmosphere.",
+  },
+  {
+    number: "03",
+    icon: "⌖",
+    title: "Great Location",
+    description: "Stay connected to the places that matter.",
+  },
+  {
+    number: "04",
+    icon: "♡",
+    title: "Friendly Service",
+    description: "Experience hospitality that feels personal.",
   },
 ];
 
 const galleryImages = [
   {
-    src: '/images/gishgum-hotel-exterior.jpg',
-    alt: 'Gishgum Hotel exterior',
-    title: 'Our Hotel',
+    image: "/images/gishgum-hotel-exterior.jpg",
+    title: "The Hotel",
   },
   {
-    src: '/images/gishgum-hotel-room.jpg',
-    alt: 'Comfortable room at Gishgum Hotel',
-    title: 'Comfortable Rooms',
+    image: "/images/gishgum-hotel-lobby.jpg",
+    title: "Welcoming Spaces",
   },
   {
-    src: '/images/gishgum-hotel-lobby.jpg',
-    alt: 'Gishgum Hotel lobby',
-    title: 'Welcoming Spaces',
+    image: "/images/gishgum-hotel-room.jpg",
+    title: "Comfortable Rooms",
   },
   {
-    src: '/images/gishgum-hotel-restaurant.jpg',
-    alt: 'Gishgum Hotel restaurant',
-    title: 'Dining Experience',
+    image: "/images/gishgum-hotel-restaurant.jpg",
+    title: "Dining Experience",
   },
 ];
 
@@ -55,33 +84,25 @@ export default function HomePage() {
     <div className="home-page">
       {/* HERO */}
       <section className="home-hero">
-        <div
-          className="home-hero-background"
-          aria-hidden="true"
-        >
+        <div className="home-hero-background" aria-hidden="true">
           <div className="home-hero-image" />
           <div className="home-hero-overlay" />
-          <div className="home-hero-glow home-hero-glow-one" />
-          <div className="home-hero-glow home-hero-glow-two" />
         </div>
 
         <div className="container">
-          <div className="home-hero-content fade-up">
+          <div className="home-hero-content">
             <div className="home-hero-copy">
-              <span className="home-hero-badge">
-                Welcome to Gishgum Hotel
-              </span>
+              <span className="home-hero-badge">WELCOME TO GISHGUM HOTEL</span>
 
               <h1 className="home-hero-title">
-                Comfort for
+                Enjoy at
                 <br />
-                <span>every stay.</span>
+                <span>GISHAGUM</span>
               </h1>
 
               <p className="home-hero-description">
-                Discover comfortable accommodation and warm
-                hospitality at Gishgum Hotel. Your next stay
-                starts here.
+                WE provide  modern comfort, and unforgettable
+                moments in the heart of Ethiopia injibara.
               </p>
 
               <div className="home-hero-actions">
@@ -89,223 +110,229 @@ export default function HomePage() {
                   href="/rooms"
                   className="btn btn-primary btn-lg home-hero-primary"
                 >
-                  Book Your Stay
+                  Explore Our Rooms
                   <span aria-hidden="true">→</span>
                 </Link>
 
                 {!isLoading && !user && (
-                  <Link
-                    href="/register"
-                    className="btn btn-secondary btn-lg home-hero-secondary"
-                  >
+                  <Link href="/register" className="home-hero-text-link">
                     Create an account
+                    <span aria-hidden="true">↗</span>
                   </Link>
                 )}
 
                 {!isLoading && user && (
-                  <Link
-                    href="/account"
-                    className="btn btn-secondary btn-lg home-hero-secondary"
-                  >
+                  <Link href="/account" className="home-hero-text-link">
                     My account
+                    <span aria-hidden="true">↗</span>
                   </Link>
                 )}
               </div>
 
               <div className="home-hero-trust">
-                <div className="home-hero-trust-item">
-                  <span>✓</span>
-                  <p>Comfortable rooms</p>
-                </div>
-
-                <div className="home-hero-trust-item">
-                  <span>✓</span>
-                  <p>Easy reservations</p>
-                </div>
-
-                <div className="home-hero-trust-item">
-                  <span>✓</span>
-                  <p>Welcoming service</p>
-                </div>
+                <span>Comfortable rooms</span>
+                <span>Warm hospitality</span>
+                <span>Easy reservations</span>
               </div>
             </div>
 
-            <div
-              className="home-hero-floating-card"
-              aria-hidden="true"
-            >
-              <span className="home-floating-label">
-                Gishgum Hotel
-              </span>
+            <div className="home-hero-story" aria-hidden="true">
+              <span className="home-hero-story-active">01</span>
+              <span>Arrival</span>
 
-              <strong>
-                Your comfort
-                <br />
-                comes first.
-              </strong>
+              <span>02</span>
+              <span>Rooms</span>
 
-              <span className="home-floating-line" />
+              <span>03</span>
+              <span>Dining</span>
+
+              <span>04</span>
+              <span>Experience</span>
             </div>
           </div>
         </div>
 
-        <div
-          className="home-hero-scroll"
-          aria-hidden="true"
-        >
+        <div className="home-hero-scroll" aria-hidden="true">
           <span />
+          Scroll to explore
+        </div>
+      </section>
+
+      {/* BOOKING SEARCH */}
+      <section className="home-booking-panel">
+        <div className="container">
+          <div className="home-booking-card">
+            <div className="home-booking-heading">
+              <span>PLAN YOUR STAY</span>
+              <strong>Find your perfect room</strong>
+            </div>
+
+            <div className="home-booking-field">
+              <span>Check-in</span>
+              <strong>Select date</strong>
+            </div>
+
+            <div className="home-booking-field">
+              <span>Check-out</span>
+              <strong>Select date</strong>
+            </div>
+
+            <div className="home-booking-field">
+              <span>Guests</span>
+              <strong>2 Guests</strong>
+            </div>
+
+            <div className="home-booking-field">
+              <span>Room type</span>
+              <strong>Any room</strong>
+            </div>
+
+            <Link href="/rooms" className="btn btn-primary home-booking-button">
+              Check Availability
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* ABOUT */}
-      <section
-        id="about"
-        className="home-about section"
-      >
+      <section id="about" className="home-about section">
         <div className="container">
           <div className="home-about-grid">
-            <div className="home-about-visual">
-              <div className="home-about-image">
-                <img
-                  src="/images/gishgum-about.jpg"
-                  alt="Gishgum Hotel"
-                  loading="lazy"
-                />
-              </div>
+            <div className="home-about-copy">
+              <span className="home-section-kicker">ABOUT GISHGUM HOTEL</span>
 
-              <div className="home-about-badge">
-                <strong>Gishgum</strong>
-                <span>Hotel & Hospitality</span>
-              </div>
-            </div>
-
-            <div className="home-about-copy fade-up">
-              <span className="badge badge-primary">
-                About Gishgum Hotel
-              </span>
-
-              <p className="home-section-kicker">
-                A place to feel at home
-              </p>
-
-              <h2 className="heading-lg">
-                A welcoming stay,
-                <br />
-                thoughtfully prepared.
+              <h2 className="home-editorial-heading">
+                
+                 We care about your comfort !
               </h2>
 
-              <p className="text-lead">
-                Gishgum Hotel offers a comfortable place to
-                relax, rest, and enjoy your time away from home.
+              <p className="home-about-lead">
+                Gishgum Hotel is more than a place to stay. It is a place where
+                comfort meets warm, thoughtful hospitality.
               </p>
 
               <p className="home-about-description">
-                Whether you are travelling for business,
-                visiting family, or enjoying a personal trip,
-                our goal is to make your stay convenient,
-                comfortable, and memorable.
+                Whether you are travelling for business, visiting family, or
+                enjoying a personal trip, we are dedicated to making your stay
+                convenient, comfortable, and memorable.
               </p>
 
-              <Link
-                href="/rooms"
-                className="home-text-link"
-              >
-                Explore our rooms
+              <Link href="/rooms" className="home-text-link">
+                Discover our rooms
                 <span aria-hidden="true">→</span>
               </Link>
+            </div>
+
+            <div className="home-about-visual">
+              <img
+                src="/images/gishgum-hotel-lobby.jpg"
+                alt="Gishgum Hotel welcoming lobby"
+                loading="lazy"
+              />
+
+              <div className="home-about-image-label">
+                <span>GISHGUM</span>
+                <strong>Hotel & Restorant</strong>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="home-features section">
+      {/* ROOMS */}
+      <section className="home-rooms section">
         <div className="container">
           <div className="home-section-heading">
             <div>
-              <p className="text-primary">
-                The Gishgum experience
-              </p>
+              <span className="home-section-kicker">OUR ROOMS</span>
 
-              <h2 className="heading-lg">
-                Everything you need
-                <br />
-                for a pleasant stay.
+              <h2 className="home-editorial-heading">
+                Our rooms 
               </h2>
             </div>
 
-            <p className="text-muted">
-              A simple hotel experience, from choosing your
-              room to completing your reservation.
-            </p>
+            <Link href="/rooms" className="home-text-link">
+              View all rooms
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
-          <div className="home-feature-grid">
-            {hotelFeatures.map((feature, index) => (
-              <article
-                key={feature.title}
-                className="home-feature-card fade-up"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
-              >
-                <div className="home-feature-icon">
-                  <span aria-hidden="true">
-                    {feature.icon}
-                  </span>
+          <div className="home-room-grid">
+            {roomHighlights.map((room, index) => (
+              <Link key={room.name} href="/rooms" className="home-room-card">
+                <div className="home-room-image">
+                  <img src={room.image} alt={room.name} loading="lazy" />
+
+                  <span className="home-room-number">0{index + 1}</span>
                 </div>
 
-                <span className="home-feature-number">
-                  0{index + 1}
+                <div className="home-room-content">
+                  <h3>{room.name}</h3>
+                  <p>{room.description}</p>
+
+                  <div className="home-room-bottom">
+                    <span>
+                      From <strong>{room.price}</strong> / night
+                    </span>
+
+                    <span aria-hidden="true">↗</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* EXPERIENCE STRIP */}
+      <section className="home-experience">
+        <div className="container">
+          <div className="home-experience-grid">
+            {experiences.map((experience) => (
+              <div key={experience.number} className="home-experience-item">
+                <span className="home-experience-icon">{experience.icon}</span>
+
+                <span className="home-experience-number">
+                  {experience.number}
                 </span>
 
-                <h3>{feature.title}</h3>
-
-                <p>{feature.description}</p>
-              </article>
+                <h3>{experience.title}</h3>
+                <p>{experience.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* GALLERY */}
-      <section
-        id="gallery"
-        className="home-gallery section"
-      >
+      <section id="gallery" className="home-gallery section">
         <div className="container">
           <div className="home-section-heading">
             <div>
-              <p className="text-primary">
-                Discover Gishgum Hotel
-              </p>
+              <span className="home-section-kicker">GALLERY</span>
 
-              <h2 className="heading-lg">
-                A glimpse of
+              <h2 className="home-editorial-heading">
+                Moments at
                 <br />
-                your next stay.
+                Gishgum Hotel.
               </h2>
             </div>
 
-            <p className="text-muted">
-              Explore our spaces and discover the atmosphere
-              waiting for you.
-            </p>
+            <Link href="/rooms" className="home-text-link">
+              View full gallery
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
 
           <div className="home-gallery-grid">
             {galleryImages.map((image, index) => (
               <Link
-                key={image.src}
+                key={image.image}
                 href="/rooms"
                 className={`home-gallery-item home-gallery-item-${index + 1}`}
-                aria-label={`${image.title}. Explore rooms.`}
               >
-                <img
-                  src={image.src}
-                  alt={image.alt}
-                  loading="lazy"
-                />
+                <img src={image.image} alt={image.title} loading="lazy" />
 
                 <div className="home-gallery-overlay">
                   <span>{image.title}</span>
@@ -317,73 +344,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ROOM CTA */}
-      <section className="home-room-cta section">
-        <div className="container">
-          <div className="home-room-cta-card">
-            <div className="home-room-cta-content">
-              <span className="badge badge-primary">
-                Find your room
-              </span>
-
-              <h2 className="heading-lg">
-                Find a room that
-                <br />
-                feels right for you.
-              </h2>
-
-              <p className="text-muted">
-                Explore available rooms, compare your options,
-                and choose the accommodation that fits your stay.
-              </p>
-
-              <Link
-                href="/rooms"
-                className="btn btn-primary btn-lg"
-              >
-                Explore Rooms
-                <span aria-hidden="true">→</span>
-              </Link>
-            </div>
-
-            <div
-              className="home-room-cta-decoration"
-              aria-hidden="true"
-            >
-              <span />
-              <span />
-              <span />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* FINAL CTA */}
       <section className="home-final-cta">
-        <div className="container">
-          <div className="home-final-cta-content fade-up">
-            <span className="home-final-cta-mark">
-              G
-            </span>
+        <div className="home-final-cta-background" />
 
-            <p className="home-section-kicker">
-              Gishgum Hotel
-            </p>
+        <div className="container">
+          <div className="home-final-cta-content">
+            <span className="home-section-kicker">YOUR NEXT STAY</span>
 
             <h2>
-              Your next stay
-              <br />
-              starts here.
+              ማረፍ ዪፈልጋሉ ?
             </h2>
 
-            <p>
-              Choose your room and make your reservation today.
-            </p>
+            <p>እንግዲያዉስ ክፍልወን ዪምረቱ </p>
 
-            <Link
-              href="/rooms"
-              className="btn btn-primary btn-lg"
-            >
+            <Link href="/rooms" className="btn btn-primary btn-lg">
               Book Your Stay
               <span aria-hidden="true">→</span>
             </Link>

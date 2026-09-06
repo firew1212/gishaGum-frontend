@@ -133,7 +133,7 @@ export default function AdminRoomsPage() {
   }, []);
 
   useEffect(() => {
-    void loadData();
+    void Promise.resolve().then(loadData);
   }, [loadData]);
 
   const availableFloors = useMemo(() => {

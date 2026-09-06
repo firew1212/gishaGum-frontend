@@ -1,26 +1,26 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-import { useAuth } from '@/src/components/auth/AuthProvider';
-import DashboardSection from '@/src/components/admin/dashboard/DashboardSection';
-import DashboardStatCard from '@/src/components/admin/dashboard/DashboardStatCard';
-import RoomStatusOverview from '@/src/components/admin/dashboard/RoomStatusOverview';
-import BookingStatusOverview from '@/src/components/admin/dashboard/BookingStatusOverview';
-import RecentBookingsTable from '@/src/components/admin/dashboard/RecentBookingsTable';
+import { useAuth } from "@/src/components/auth/AuthProvider";
+import DashboardSection from "@/src/components/admin/dashboard/DashboardSection";
+import DashboardStatCard from "@/src/components/admin/dashboard/DashboardStatCard";
+import RoomStatusOverview from "@/src/components/admin/dashboard/RoomStatusOverview";
+import BookingStatusOverview from "@/src/components/admin/dashboard/BookingStatusOverview";
+import RecentBookingsTable from "@/src/components/admin/dashboard/RecentBookingsTable";
 
 import {
   calculateDashboardMetrics,
   formatCurrency,
   getRecentBookings,
   type DashboardMetrics,
-} from '@/src/lib/admin-dashboard';
+} from "@/src/lib/admin-dashboard";
 
 import {
   getAdminDashboardData,
   type AdminDashboardData,
-} from '@/src/lib/admin-api';
+} from "@/src/lib/admin-api";
 
 function OverviewIcon() {
   return (
@@ -123,7 +123,7 @@ export default function AdminDashboardPage() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Unable to load dashboard data.',
+          : "Unable to load dashboard data.",
       );
     } finally {
       setIsLoading(false);
@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
   }, [accessToken]);
 
   useEffect(() => {
-    loadDashboard();
+    void Promise.resolve().then(loadDashboard);
   }, [loadDashboard]);
 
   if (isLoading) {
@@ -256,10 +256,7 @@ export default function AdminDashboardPage() {
           title="Booking status"
           description="Current booking lifecycle"
           action={
-            <Link
-              href="/admin/bookings"
-              className="dashboard-section-link"
-            >
+            <Link href="/admin/bookings" className="dashboard-section-link">
               View bookings
             </Link>
           }
@@ -272,10 +269,7 @@ export default function AdminDashboardPage() {
         title="Recent bookings"
         description="The latest booking activity"
         action={
-          <Link
-            href="/admin/bookings"
-            className="dashboard-section-link"
-          >
+          <Link href="/admin/bookings" className="dashboard-section-link">
             View all
           </Link>
         }

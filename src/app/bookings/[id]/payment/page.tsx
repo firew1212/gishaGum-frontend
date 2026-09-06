@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
+import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 
 import {
   getMyBooking,
@@ -81,6 +82,14 @@ function calculatePaidAmount(
 }
 
 export default function PaymentPage() {
+  return (
+    <ProtectedRoute>
+      <PaymentContent />
+    </ProtectedRoute>
+  );
+}
+
+function PaymentContent() {
   const params = useParams<{ id: string }>();
 
   const {
@@ -439,7 +448,7 @@ export default function PaymentPage() {
 
             <div>
               <strong>
-                Payment couldn't be
+                Payment couldn&apos;t be
                 started
               </strong>
 
@@ -552,7 +561,7 @@ export default function PaymentPage() {
 
                   <p>
                     You will be redirected
-                    to Chapa's secure
+                    to Chapa&apos;s secure
                     checkout.
                   </p>
                 </div>
@@ -648,7 +657,7 @@ export default function PaymentPage() {
                 <p>
                   Clicking the button
                   below will take you
-                  to Chapa's secure
+                  to Chapa&apos;s secure
                   payment page.
                 </p>
               </div>

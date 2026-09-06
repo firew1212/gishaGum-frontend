@@ -190,7 +190,7 @@ export default function RegisterPage() {
 
               <div>
                 <strong>
-                  We couldn't create your account.
+                  We couldn&apos;t create your account.
                 </strong>
 
                 <p>{error}</p>

@@ -1,15 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 import RoomAvailabilitySearch from '@/src/components/rooms/RoomAvailabilitySearch';
 import RoomGrid from '@/src/components/rooms/RoomGrid';
+import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 import {
   getRooms,
   type Room,
 } from '@/src/lib/rooms-api';
 
 export default function RoomsPage() {
+  return (
+    <ProtectedRoute>
+      <RoomsContent />
+    </ProtectedRoute>
+  );
+}
+
+function RoomsContent() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -73,10 +83,9 @@ export default function RoomsPage() {
   return (
     <>
       {/* =====================================================
-          ROOMS HERO
+          HERO
           ===================================================== */}
       <section className="rooms-hero">
-        {/* Ready-to-fill background image area */}
         <div
           className="rooms-hero-background"
           aria-hidden="true"
@@ -90,33 +99,51 @@ export default function RoomsPage() {
         <div className="container">
           <div className="rooms-hero-content fade-up">
             <span className="badge rooms-hero-badge">
-              Accommodation
+              Gishgum Hotel
             </span>
 
             <h1 className="rooms-hero-title">
-              Find the right room
+              Find your
               <br />
-              for your stay.
+              perfect stay.
             </h1>
 
             <p className="rooms-hero-description">
-              Explore comfortable rooms and check real-time
-              availability for your preferred dates.
+              Discover comfortable rooms, thoughtful
+              hospitality, and a peaceful place to enjoy
+              your time in Ethiopia.
             </p>
+
+            <div className="rooms-hero-actions">
+              <a
+                href="#availability"
+                className="btn btn-primary"
+              >
+                Check availability
+              </a>
+
+              <Link
+                href="/"
+                className="rooms-hero-text-link"
+              >
+                Back to home
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
 
             <div className="rooms-hero-highlights">
               <div className="rooms-hero-highlight">
-                <span>✓</span>
+                <span aria-hidden="true">✓</span>
                 <p>Comfortable rooms</p>
               </div>
 
               <div className="rooms-hero-highlight">
-                <span>✓</span>
+                <span aria-hidden="true">✓</span>
                 <p>Real-time availability</p>
               </div>
 
               <div className="rooms-hero-highlight">
-                <span>✓</span>
+                <span aria-hidden="true">✓</span>
                 <p>Simple booking</p>
               </div>
             </div>
@@ -134,12 +161,15 @@ export default function RoomsPage() {
       {/* =====================================================
           AVAILABILITY SEARCH
           ===================================================== */}
-      <section className="rooms-search-section">
+      <section
+        id="availability"
+        className="rooms-search-section"
+      >
         <div className="container">
           <div className="rooms-search-card">
             <div className="rooms-search-heading">
               <span className="badge badge-primary">
-                Search availability
+                Plan your stay
               </span>
 
               <h2 className="heading-md">
@@ -147,8 +177,8 @@ export default function RoomsPage() {
               </h2>
 
               <p className="text-muted">
-                Select your dates to see rooms available
-                for your stay.
+                Select your check-in and check-out dates
+                to discover rooms available for your stay.
               </p>
             </div>
 
@@ -162,7 +192,7 @@ export default function RoomsPage() {
       </section>
 
       {/* =====================================================
-          ROOMS
+          ROOM RESULTS
           ===================================================== */}
       <section className="section rooms-results-section">
         <div className="container">
@@ -176,14 +206,14 @@ export default function RoomsPage() {
 
               <h2 className="heading-lg">
                 {hasSearched
-                  ? 'Available rooms'
+                  ? 'Rooms available for you'
                   : 'Choose your room'}
               </h2>
 
               <p className="text-muted">
                 {hasSearched
                   ? 'These rooms are available for the dates you selected.'
-                  : 'Comfortable spaces designed for a pleasant hotel stay.'}
+                  : 'Comfortable spaces designed for a pleasant and memorable hotel stay.'}
               </p>
             </div>
 
@@ -225,7 +255,7 @@ export default function RoomsPage() {
               role="alert"
             >
               <strong>
-                We couldn't complete your request.
+                We couldn&apos;t complete your request.
               </strong>
 
               <p>{error}</p>
@@ -261,6 +291,15 @@ export default function RoomsPage() {
                     ? 'Try different dates or select another room type.'
                     : 'There are currently no rooms available to display.'}
                 </p>
+
+                {hasSearched && (
+                  <a
+                    href="#availability"
+                    className="btn btn-secondary"
+                  >
+                    Search different dates
+                  </a>
+                )}
               </div>
             )}
         </div>
@@ -272,19 +311,35 @@ export default function RoomsPage() {
       <section className="rooms-bottom-cta">
         <div className="container">
           <div className="rooms-bottom-cta-card">
-            <div>
+            <div className="rooms-bottom-cta-content">
               <span className="badge badge-primary">
                 Your stay starts here
               </span>
 
               <h2 className="heading-lg">
-                Find a room that feels like home.
+                A comfortable room
+                <br />
+                is waiting for you.
               </h2>
 
               <p className="text-muted">
                 Explore our accommodation and choose
                 the room that fits your stay.
               </p>
+
+              <a
+                href="#availability"
+                className="btn btn-primary"
+              >
+                Check availability
+              </a>
+            </div>
+
+            <div
+              className="rooms-bottom-cta-decoration"
+              aria-hidden="true"
+            >
+              <span>G</span>
             </div>
           </div>
         </div>

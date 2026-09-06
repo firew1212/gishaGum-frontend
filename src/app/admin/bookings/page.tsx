@@ -155,7 +155,7 @@ export default function AdminBookingsPage() {
 
   useEffect(() => {
     if (!authLoading && accessToken) {
-      loadBookings();
+      void Promise.resolve().then(loadBookings);
     }
   }, [accessToken, authLoading, loadBookings]);
 

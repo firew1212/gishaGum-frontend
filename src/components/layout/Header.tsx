@@ -9,6 +9,8 @@ import { useAuth } from '@/src/components/auth/AuthProvider';
 const navigation = [
   { label: 'Home', href: '/' },
   { label: 'Rooms', href: '/rooms' },
+  { label: 'About', href: '/#about' },
+  { label: 'Gallery', href: '/#gallery' },
 ];
 
 export default function Header() {
@@ -30,19 +32,24 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="site-header-inner">
+
         {/* Brand */}
         <Link
           href="/"
           className="site-logo"
-          aria-label="Hotel Booking home"
+          aria-label="Gishgum Hotel home"
           onClick={closeMobileMenu}
         >
-          <span className="site-logo-mark" aria-hidden="true">
-            H
+          <span
+            className="site-logo-mark"
+            aria-hidden="true"
+          >
+            G
           </span>
 
           <span className="site-logo-text">
-            Hotel Booking
+            <strong>GISHGUM</strong>
+            <small>HOTEL</small>
           </span>
         </Link>
 
@@ -77,30 +84,30 @@ export default function Header() {
             ) : user ? (
               <>
                 <Link
-  href="/account"
-  className="header-account-link"
-  onClick={closeMobileMenu}
->
-  <span
-    className="header-user-avatar"
-    aria-hidden="true"
-  >
-    {(user.fullName ?? 'U').charAt(0).toUpperCase()}
-  </span>
+                  href="/account"
+                  className="header-account-link"
+                  onClick={closeMobileMenu}
+                >
+                  <span
+                    className="header-user-avatar"
+                    aria-hidden="true"
+                  >
+                    {(user.fullName ?? 'U')
+                      .charAt(0)
+                      .toUpperCase()}
+                  </span>
 
-  <span className="header-user-name">
-    {user.fullName ?? 'Account'}
-  </span>
-</Link>
+                  <span className="header-user-name">
+                    {user.fullName ?? 'Account'}
+                  </span>
+                </Link>
 
                 <button
                   type="button"
                   className="btn btn-primary header-register-button"
                   onClick={handleLogout}
                 >
-                  <Link href={"/login"} >
-                     Log out
-                  </Link>
+                  Log out
                 </button>
               </>
             ) : (
@@ -150,6 +157,7 @@ export default function Header() {
           <span />
           <span />
         </button>
+
       </div>
     </header>
   );
