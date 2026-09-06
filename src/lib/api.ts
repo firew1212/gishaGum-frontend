@@ -1,12 +1,6 @@
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-if (!API_URL) {
-  throw new Error(
-    'NEXT_PUBLIC_API_URL is not configured. Add it to your frontend .env.local file.',
-  );
-}
-
 export class ApiError extends Error {
   status: number;
   data?: unknown;
@@ -49,6 +43,13 @@ export async function apiRequest<T>(
   endpoint: string,
   options: ApiRequestOptions = {},
 ): Promise<T> {
+  if (!API_URL) {
+    throw new ApiError(
+      'NEXT_PUBLIC_API_URL is not configured. Add it to the frontend deployment environment.',
+      0,
+    );
+  }
+
   const { token, headers, ...requestOptions } = options;
 
   const requestHeaders = new Headers(headers);
