@@ -6,7 +6,6 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
-import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 
 import {
   cancelBooking,
@@ -23,14 +22,6 @@ import {
 } from '@/src/lib/booking-utils';
 
 export default function BookingDetailsPage() {
-  return (
-    <ProtectedRoute>
-      <BookingDetailsContent />
-    </ProtectedRoute>
-  );
-}
-
-function BookingDetailsContent() {
   const params = useParams<{ id: string }>();
 
   const {
@@ -170,7 +161,7 @@ function BookingDetailsContent() {
         <div className="container">
           <div className="booking-error">
             <strong>
-              We couldn&apos;t load this booking.
+              We couldn't load this booking.
             </strong>
 
             <p>{error}</p>
@@ -258,7 +249,7 @@ function BookingDetailsContent() {
 
             <div>
               <strong>
-                Action couldn&apos;t be completed
+                Action couldn't be completed
               </strong>
 
               <p>{error}</p>

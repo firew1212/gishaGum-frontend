@@ -3,8 +3,12 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
 
@@ -22,7 +26,7 @@ type PageState =
 
 export default function ChapaReturnPage() {
   return (
-    <Suspense fallback={<ChapaReturnLoading />}>
+    <Suspense fallback={null}>
       <ChapaReturnContent />
     </Suspense>
   );
@@ -449,7 +453,7 @@ function ChapaReturnContent() {
           </span>
 
           <h1>
-            We couldn&apos;t verify the payment
+            We couldn't verify the payment
           </h1>
 
           <p>
@@ -472,34 +476,6 @@ function ChapaReturnContent() {
               Explore rooms
             </Link>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ChapaReturnLoading() {
-  return (
-    <section className="payment-result-page">
-      <div className="container">
-        <div
-          className="payment-result-card"
-          aria-live="polite"
-          aria-busy="true"
-        >
-          <div className="payment-result-icon payment-result-loading">
-            <span className="spinner" aria-hidden="true" />
-          </div>
-
-          <h1>Verifying your payment</h1>
-
-          <p>
-            Please wait while we securely confirm your transaction with Chapa.
-          </p>
-
-          <p className="payment-result-note">
-            Please do not close this page.
-          </p>
         </div>
       </div>
     </section>

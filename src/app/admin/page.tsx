@@ -131,7 +131,7 @@ export default function AdminDashboardPage() {
   }, [accessToken]);
 
   useEffect(() => {
-    void Promise.resolve().then(loadDashboard);
+    loadDashboard();
   }, [loadDashboard]);
 
   if (isLoading) {

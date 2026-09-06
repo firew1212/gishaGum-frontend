@@ -272,7 +272,7 @@ export default function BookingForm({ room }: BookingFormProps) {
 
               <h2>Who is staying?</h2>
 
-              <p>Enter the primary guest&apos;s information.</p>
+              <p>Enter the primary guest's information.</p>
             </div>
           </div>
 
@@ -394,7 +394,7 @@ export default function BookingForm({ room }: BookingFormProps) {
             </span>
 
             <div>
-              <strong>We couldn&apos;t create your booking.</strong>
+              <strong>We couldn't create your booking.</strong>
 
               <p>{error}</p>
             </div>

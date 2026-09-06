@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
-import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 
 import {
   getMyBookings,
@@ -19,14 +18,6 @@ import {
 } from '@/src/lib/booking-utils';
 
 export default function MyBookingsPage() {
-  return (
-    <ProtectedRoute>
-      <MyBookingsContent />
-    </ProtectedRoute>
-  );
-}
-
-function MyBookingsContent() {
   const {
     accessToken,
     isAuthenticated,
@@ -217,7 +208,7 @@ function MyBookingsContent() {
             <h2>No bookings yet</h2>
 
             <p>
-              You haven&apos;t made a hotel reservation yet.
+              You haven't made a hotel reservation yet.
               Find a room and start planning your stay.
             </p>
 

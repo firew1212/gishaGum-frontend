@@ -3,8 +3,12 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import { useAuth } from '@/src/components/auth/AuthProvider';
 
@@ -391,7 +395,7 @@ function PaymentCallbackContent() {
             Verification problem
           </span>
 
-          <h1>We couldn&apos;t verify the payment</h1>
+          <h1>We couldn't verify the payment</h1>
 
           <p>
             {error ||
@@ -429,13 +433,17 @@ function PaymentCallbackLoading() {
           aria-busy="true"
         >
           <div className="payment-result-icon payment-result-loading">
-            <span className="spinner" aria-hidden="true" />
+            <span
+              className="spinner"
+              aria-hidden="true"
+            />
           </div>
 
           <h1>Verifying your payment</h1>
 
           <p>
-            Please wait while we securely confirm your transaction with Chapa.
+            Please wait while we securely confirm
+            your transaction with Chapa.
           </p>
 
           <p className="payment-result-note">

@@ -5,21 +5,12 @@ import Link from 'next/link';
 
 import RoomAvailabilitySearch from '@/src/components/rooms/RoomAvailabilitySearch';
 import RoomGrid from '@/src/components/rooms/RoomGrid';
-import ProtectedRoute from '@/src/components/auth/ProtectedRoute';
 import {
   getRooms,
   type Room,
 } from '@/src/lib/rooms-api';
 
 export default function RoomsPage() {
-  return (
-    <ProtectedRoute>
-      <RoomsContent />
-    </ProtectedRoute>
-  );
-}
-
-function RoomsContent() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -255,7 +246,7 @@ function RoomsContent() {
               role="alert"
             >
               <strong>
-                We couldn&apos;t complete your request.
+                We couldn't complete your request.
               </strong>
 
               <p>{error}</p>
