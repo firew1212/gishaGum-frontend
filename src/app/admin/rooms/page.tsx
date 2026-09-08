@@ -11,22 +11,34 @@ import { useAuth } from '@/src/components/auth/AuthProvider';
 
 import {
   createRoom,
+  createRoomType,
+  deleteRoomType,
   deleteRoom,
   getAdminRoomTypes,
   getAdminRooms,
   updateRoom,
+  updateRoomType,
   type Room,
   type RoomStatus,
   type RoomType,
 } from '@/src/lib/admin-rooms-api';
 
 type ModalMode = 'create' | 'edit' | null;
+type RoomTypeModalMode = 'create' | 'edit' | null;
 
 interface RoomFormState {
   roomNumber: string;
   floor: string;
   roomTypeId: string;
   status: RoomStatus;
+}
+
+interface RoomTypeFormState {
+  name: string;
+  description: string;
+  price: string;
+  amenities: string;
+  images: string;
 }
 
 const ROOM_STATUSES: RoomStatus[] = [
@@ -43,6 +55,13 @@ const EMPTY_FORM: RoomFormState = {
   status: 'AVAILABLE',
 };
 
+const EMPTY_ROOM_TYPE_FORM: RoomTypeFormState = {
+  name: '',
+  description: '',
+  price: '',
+  amenities: '',
+  images: '',
+};
 function formatRoomStatus(status: RoomStatus): string {
   return status
     .replaceAll('_', ' ')
@@ -99,15 +118,25 @@ export default function AdminRoomsPage() {
   const [floorFilter, setFloorFilter] = useState('ALL');
 
   const [modalMode, setModalMode] = useState<ModalMode>(null);
+  const [roomTypeModalMode, setRoomTypeModalMode] =
+    useState<RoomTypeModalMode>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(
     null,
   );
+  const [selectedRoomType, setSelectedRoomType] =
+    useState<RoomType | null>(null);
 
   const [form, setForm] =
     useState<RoomFormState>(EMPTY_FORM);
+  const [roomTypeForm, setRoomTypeForm] =
+    useState<RoomTypeFormState>(EMPTY_ROOM_TYPE_FORM);
 
   const [roomToDelete, setRoomToDelete] =
     useState<Room | null>(null);
+  const [roomTypeToDelete, setRoomTypeToDelete] =
+    useState<RoomType | null>(null);
+  const [roomTypeFormError, setRoomTypeFormError] =
+    useState('');
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
@@ -186,6 +215,26 @@ export default function AdminRoomsPage() {
     setModalMode('create');
   }
 
+  function openCreateRoomTypeModal() {
+    setSelectedRoomType(null);
+    setRoomTypeForm(EMPTY_ROOM_TYPE_FORM);
+    setRoomTypeFormError('');
+    setRoomTypeModalMode('create');
+  }
+
+  function openEditRoomTypeModal(roomType: RoomType) {
+    setSelectedRoomType(roomType);
+    setRoomTypeForm({
+      name: roomType.name,
+      description: roomType.description ?? '',
+      price: String(roomType.price),
+      amenities: roomType.amenities.join(', '),
+      images: roomType.images.join('\n'),
+    });
+    setRoomTypeFormError('');
+    setRoomTypeModalMode('edit');
+  }
+
   function openEditModal(room: Room) {
     setSelectedRoom(room);
 
@@ -211,11 +260,32 @@ export default function AdminRoomsPage() {
     setFormError('');
   }
 
+  function closeRoomTypeModal() {
+    if (isSubmitting) {
+      return;
+    }
+
+    setRoomTypeModalMode(null);
+    setSelectedRoomType(null);
+    setRoomTypeForm(EMPTY_ROOM_TYPE_FORM);
+    setRoomTypeFormError('');
+  }
+
   function updateFormField(
     field: keyof RoomFormState,
     value: string,
   ) {
     setForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  function updateRoomTypeFormField(
+    field: keyof RoomTypeFormState,
+    value: string,
+  ) {
+    setRoomTypeForm((current) => ({
       ...current,
       [field]: value,
     }));
@@ -332,6 +402,94 @@ export default function AdminRoomsPage() {
     }
   }
 
+  async function handleRoomTypeSubmit(
+    event: React.FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    if (!accessToken) {
+      setRoomTypeFormError('Your session has expired. Please log in again.');
+      return;
+    }
+
+    const price = Number(roomTypeForm.price);
+    const amenities = roomTypeForm.amenities
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    const images = roomTypeForm.images
+      .split(/\r?\n|,/) 
+      .map((item) => item.trim())
+      .filter(Boolean);
+
+    if (!roomTypeForm.name.trim()) {
+      setRoomTypeFormError('Room type name is required.');
+      return;
+    }
+
+    if (!Number.isFinite(price) || price < 0) {
+      setRoomTypeFormError('Price must be a valid positive number.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setRoomTypeFormError('');
+
+    try {
+      const payload = {
+        name: roomTypeForm.name.trim(),
+        description: roomTypeForm.description.trim() || undefined,
+        price,
+        amenities,
+        images,
+      };
+
+      if (roomTypeModalMode === 'create') {
+        await createRoomType(payload, accessToken);
+      } else if (selectedRoomType) {
+        await updateRoomType(selectedRoomType.id, payload, accessToken);
+      }
+
+      setRoomTypeModalMode(null);
+      setSelectedRoomType(null);
+      setRoomTypeForm(EMPTY_ROOM_TYPE_FORM);
+      setRoomTypeFormError('');
+      await loadData();
+    } catch (error) {
+      setRoomTypeFormError(
+        error instanceof Error
+          ? error.message
+          : 'Unable to save the room type.',
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleRoomTypeDelete() {
+    if (!accessToken || !roomTypeToDelete) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setErrorMessage('');
+
+    try {
+      await deleteRoomType(roomTypeToDelete.id, accessToken);
+      setRoomTypeToDelete(null);
+      await loadData();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : 'Unable to delete the room type.',
+      );
+      setRoomTypeToDelete(null);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   function clearFilters() {
     setSearchTerm('');
     setStatusFilter('ALL');
@@ -401,6 +559,82 @@ export default function AdminRoomsPage() {
           </button>
         </div>
       )}
+
+      <div className="admin-content-card">
+        <div className="admin-section-header">
+          <div>
+            <h2 className="admin-section-title">Room types</h2>
+            <p className="admin-section-description">
+              Define the public room name, price, amenities, and images used across the website.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={openCreateRoomTypeModal}
+            disabled={!accessToken || isLoading}
+          >
+            <span aria-hidden="true">+</span>
+            Add room type
+          </button>
+        </div>
+
+        {!isLoading && roomTypes.length === 0 && (
+          <div className="admin-empty-state">
+            <p>No room types found. Add one before creating rooms.</p>
+          </div>
+        )}
+
+        {roomTypes.length > 0 && (
+          <div className="admin-table-wrapper">
+            <table className="admin-table room-management-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Amenities</th>
+                  <th>Rooms</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {roomTypes.map((roomType) => (
+                  <tr key={roomType.id}>
+                    <td>
+                      <div className="room-type-cell">
+                        <strong>{roomType.name}</strong>
+                        <span>{roomType.description || 'No description'}</span>
+                      </div>
+                    </td>
+                    <td>ETB {formatPrice(roomType.price)}</td>
+                    <td>{roomType.amenities.length}</td>
+                    <td>{roomType.rooms?.length ?? 0}</td>
+                    <td>
+                      <div className="admin-table-actions">
+                        <button
+                          type="button"
+                          className="btn btn-small btn-secondary"
+                          onClick={() => openEditRoomTypeModal(roomType)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-small btn-danger"
+                          onClick={() => setRoomTypeToDelete(roomType)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       <div className="admin-content-card">
         <div className="admin-section-header">
@@ -911,6 +1145,164 @@ export default function AdminRoomsPage() {
                   ? 'Deleting...'
                   : 'Delete room'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {roomTypeModalMode && (
+        <div
+          className="admin-modal-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              closeRoomTypeModal();
+            }
+          }}
+        >
+          <div
+            className="admin-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="room-type-modal-title"
+          >
+            <div className="admin-modal-header">
+              <div>
+                <p className="admin-eyebrow">
+                  {roomTypeModalMode === 'create' ? 'New room type' : 'Room type settings'}
+                </p>
+                <h2 id="room-type-modal-title">
+                  {roomTypeModalMode === 'create' ? 'Add room type' : 'Edit room type'}
+                </h2>
+              </div>
+              <button
+                type="button"
+                className="admin-modal-close"
+                aria-label="Close room type modal"
+                onClick={closeRoomTypeModal}
+                disabled={isSubmitting}
+              >
+                ×
+              </button>
+            </div>
+
+            <form className="admin-modal-form" onSubmit={handleRoomTypeSubmit}>
+              {roomTypeFormError && (
+                <div className="admin-alert admin-alert-error">
+                  {roomTypeFormError}
+                </div>
+              )}
+
+              <div className="form-field">
+                <label htmlFor="room-type-name">Name</label>
+                <input
+                  id="room-type-name"
+                  className="form-input"
+                  value={roomTypeForm.name}
+                  onChange={(event) => updateRoomTypeFormField('name', event.target.value)}
+                  placeholder="Signature Suite"
+                  disabled={isSubmitting}
+                  required
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="room-type-description">Description</label>
+                <textarea
+                  id="room-type-description"
+                  className="form-input"
+                  value={roomTypeForm.description}
+                  onChange={(event) => updateRoomTypeFormField('description', event.target.value)}
+                  placeholder="A calm, spacious stay with views across the city."
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="room-type-price">Price per night</label>
+                <input
+                  id="room-type-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  className="form-input"
+                  value={roomTypeForm.price}
+                  onChange={(event) => updateRoomTypeFormField('price', event.target.value)}
+                  placeholder="2500"
+                  disabled={isSubmitting}
+                  required
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="room-type-amenities">Amenities</label>
+                <input
+                  id="room-type-amenities"
+                  className="form-input"
+                  value={roomTypeForm.amenities}
+                  onChange={(event) => updateRoomTypeFormField('amenities', event.target.value)}
+                  placeholder="WiFi, Breakfast, Ocean view"
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div className="form-field">
+                <label htmlFor="room-type-images">Images</label>
+                <textarea
+                  id="room-type-images"
+                  className="form-input"
+                  value={roomTypeForm.images}
+                  onChange={(event) => updateRoomTypeFormField('images', event.target.value)}
+                  placeholder="/images/suite.jpg or https://... (one per line)"
+                  disabled={isSubmitting}
+                />
+                <span className="form-help-text">
+                  Add one local path or image URL per line. Use files from <code>front-end/public/images</code> with paths like <code>/images/suite.jpg</code>.
+                </span>
+                {roomTypeForm.images.trim() && (
+                  <div className="room-type-image-preview" aria-label="Room type image preview">
+                    {roomTypeForm.images
+                      .split(/\r?\n|,/)
+                      .map((image) => image.trim())
+                      .filter(Boolean)
+                      .slice(0, 4)
+                      .map((image) => (
+                        <img key={image} src={image} alt="Room type preview" />
+                      ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="admin-modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeRoomTypeModal} disabled={isSubmitting}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                  {isSubmitting ? 'Saving...' : roomTypeModalMode === 'create' ? 'Create room type' : 'Save changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {roomTypeToDelete && (
+        <div className="admin-modal-backdrop" role="presentation">
+          <div className="admin-modal admin-modal-small" role="dialog" aria-modal="true" aria-labelledby="delete-room-type-title">
+            <div className="admin-modal-header">
+              <div>
+                <p className="admin-eyebrow">Permanent action</p>
+                <h2 id="delete-room-type-title">Delete room type?</h2>
+              </div>
+              <button type="button" className="admin-modal-close" aria-label="Close delete confirmation" onClick={() => setRoomTypeToDelete(null)} disabled={isDeleting}>×</button>
+            </div>
+            <div className="admin-modal-content">
+              <p>Delete <strong>{roomTypeToDelete.name}</strong>?</p>
+              <p className="admin-modal-warning">Room types with rooms assigned cannot be deleted.</p>
+            </div>
+            <div className="admin-modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setRoomTypeToDelete(null)} disabled={isDeleting}>Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={() => void handleRoomTypeDelete()} disabled={isDeleting}>{isDeleting ? 'Deleting...' : 'Delete room type'}</button>
             </div>
           </div>
         </div>

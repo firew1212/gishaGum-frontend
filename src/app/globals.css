@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* =========================================================
@@ -485,6 +486,510 @@ img {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================================
+   LANDING SIGNATURE SECTION + ADMIN EDITOR POLISH
+   ========================================================= */
+
+.home-signature-section {
+  padding: 7rem 0;
+  background: #172b32;
+  color: #fff;
+}
+
+.home-signature-intro {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr 1fr;
+  align-items: end;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.home-signature-intro .home-section-kicker {
+  align-self: start;
+  padding-top: 0.6rem;
+}
+
+.home-signature-intro .home-editorial-heading {
+  color: #fff;
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+}
+
+.home-signature-intro p {
+  max-width: 330px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.8;
+}
+
+.home-signature-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr 0.85fr;
+  gap: 1rem;
+}
+
+.home-signature-card {
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.5rem;
+  color: #fff;
+  background: #243239;
+}
+
+.home-signature-card-tall {
+  min-height: 430px;
+}
+
+.home-signature-card::after {
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(5, 17, 21, 0.9));
+  content: "";
+}
+
+.home-signature-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-signature-card:hover img {
+  transform: scale(1.08);
+}
+
+.home-signature-card span,
+.home-signature-card strong {
+  position: relative;
+  z-index: 1;
+}
+
+.home-signature-card span {
+  color: #d9a76d;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-signature-card strong {
+  max-width: 260px;
+  margin-top: 0.55rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.admin-modal {
+  max-height: min(86vh, 760px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-modal-form {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.admin-modal-form .admin-modal-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin: 0 -1.5rem -1.5rem;
+}
+
+.form-help-text {
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.form-help-text code {
+  padding: 0.1rem 0.25rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 0.7rem;
+}
+
+.room-type-image-preview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.room-type-image-preview img {
+  width: 100%;
+  aspect-ratio: 1.4;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+@media (max-width: 800px) {
+  .home-signature-intro,
+  .home-signature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-signature-card,
+  .home-signature-card-tall {
+    min-height: 320px;
+  }
+}
+
+/* =========================================================
+   LANDING MOTION FINISH
+   ========================================================= */
+
+.home-hero {
+  min-height: 780px;
+  background: #172b32;
+}
+
+.home-hero-background {
+  inset: -2%;
+}
+
+.home-hero-image {
+  inset: -8%;
+  background-image: url('/images/gishgum-hotel-exterior.jpg');
+  background-position: 52% 48%;
+  transform: scale(1.08) translate3d(0, 0, 0);
+  animation: landingImageJourney 12s ease-in-out infinite alternate;
+  will-change: transform, background-position;
+}
+
+.home-hero-overlay {
+  background:
+    linear-gradient(90deg, rgba(10, 29, 34, 0.92) 0%, rgba(10, 29, 34, 0.72) 43%, rgba(10, 29, 34, 0.22) 100%),
+    linear-gradient(180deg, rgba(10, 29, 34, 0.18) 0%, rgba(10, 29, 34, 0.48) 100%);
+}
+
+.home-hero-copy > * {
+  opacity: 0;
+  animation: landingTextReveal 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.home-hero-copy > :nth-child(1) {
+  animation-delay: 180ms;
+}
+
+.home-hero-copy > :nth-child(2) {
+  animation-delay: 340ms;
+}
+
+.home-hero-copy > :nth-child(3) {
+  animation-delay: 500ms;
+}
+
+.home-hero-copy > :nth-child(4) {
+  animation-delay: 660ms;
+}
+
+.home-hero-copy > :nth-child(5) {
+  animation-delay: 820ms;
+}
+
+.home-hero-title {
+  position: relative;
+  text-shadow: 0 12px 35px rgba(4, 18, 22, 0.24);
+}
+
+.home-hero-title span {
+  display: inline-block;
+  color: #d9a76d;
+  animation: landingTitleFloat 6s ease-in-out 1.6s infinite alternate;
+  will-change: transform;
+}
+
+.home-hero-description {
+  max-width: 520px;
+}
+
+.home-hero-actions {
+  animation-duration: 1050ms !important;
+}
+
+.home-hero-primary {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.home-hero-trust {
+  animation-duration: 1100ms !important;
+}
+
+.home-hero-scroll {
+  animation: landingScrollFloat 2.8s ease-in-out infinite;
+}
+
+.home-hero-scroll span {
+  animation-duration: 1.8s;
+}
+
+@keyframes landingImageJourney {
+  0% {
+    background-position: 40% 54%;
+    transform: scale(1.08) translate3d(-1.5%, 0.5%, 0);
+  }
+
+  50% {
+    background-position: 54% 45%;
+    transform: scale(1.15) translate3d(1.5%, -1%, 0);
+  }
+
+  100% {
+    background-position: 66% 50%;
+    transform: scale(1.1) translate3d(-0.5%, 1%, 0);
+  }
+}
+
+@keyframes landingTextReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes landingTitleFloat {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+
+@keyframes landingScrollFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    min-height: 720px;
+  }
+
+  .home-hero-image {
+    background-position: 62% 50%;
+  }
+
+  .home-hero-overlay {
+    background:
+      linear-gradient(90deg, rgba(10, 29, 34, 0.86), rgba(10, 29, 34, 0.52)),
+      linear-gradient(180deg, rgba(10, 29, 34, 0.2), rgba(10, 29, 34, 0.66));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-image,
+  .home-hero-title span,
+  .home-hero-scroll,
+  .home-hero-copy > * {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =========================================================
+   RESORT EDITORIAL THEME
+   ========================================================= */
+
+:root {
+  --background: #f5f1ea;
+  --foreground: #17232b;
+  --primary-50: #f7eee2;
+  --primary-100: #efe0cb;
+  --primary-500: #b17a3e;
+  --primary-600: #98622e;
+  --primary-700: #764721;
+  --primary-900: #3e2818;
+  --gray-50: #fbfaf7;
+  --gray-100: #f1eee8;
+  --gray-200: #ded9cf;
+  --gray-400: #9b9c94;
+  --gray-500: #70766f;
+  --gray-600: #56615d;
+  --gray-800: #243239;
+  --gray-900: #17232b;
+  --surface: #fbfaf7;
+  --surface-secondary: #ece9e2;
+  --border: #ded9cf;
+  --text-primary: #17232b;
+  --text-secondary: #70766f;
+  --primary: #98622e;
+  --primary-light: #f7eee2;
+  --primary-dark: #764721;
+  --page-width: 1320px;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'DM Sans', sans-serif;
+}
+
+h1, h2, h3, h4, .heading-xl, .heading-lg, .heading-md,
+.home-editorial-heading, .home-hero-title, .rooms-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.container {
+  width: min(100% - 48px, var(--page-width));
+}
+
+.btn {
+  border-radius: 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.btn-primary {
+  background: #b17a3e;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #764721;
+}
+
+.home-hero-title {
+  max-width: 760px;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  line-height: 0.9;
+}
+
+.home-hero-title span {
+  color: #d5a064;
+}
+
+.home-hero-description {
+  max-width: 480px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.home-hero-badge, .home-section-kicker, .rooms-hero-badge {
+  color: #d5a064;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+}
+
+.home-booking-panel {
+  position: relative;
+  z-index: 3;
+  background: #f5f1ea;
+}
+
+.home-booking-card {
+  border: 1px solid #d8d0c3;
+  border-radius: 0;
+  box-shadow: 0 18px 40px rgba(23, 35, 43, 0.08);
+}
+
+.home-booking-heading strong, .home-room-content h3,
+.home-editorial-heading, .rooms-section-heading .heading-lg {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+}
+
+.home-about, .home-gallery {
+  background: #f5f1ea;
+}
+
+.home-rooms {
+  background: #ece9e2;
+}
+
+.home-experience {
+  background: #172b32;
+}
+
+.home-room-card, .home-gallery-item, .home-about-visual img,
+.room-card, .rooms-search-card, .auth-card {
+  border-radius: 0;
+}
+
+.home-room-image, .room-card-image {
+  background: #172b32;
+}
+
+.home-room-card:hover img, .room-card:hover .room-card-image img {
+  transform: scale(1.04);
+}
+
+.site-header {
+  min-height: 88px;
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+}
+
+.site-nav-link {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.header-book-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #d5a064;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.header-book-link span {
+  font-size: 1rem;
+}
+
+.site-footer {
+  background: #172b32;
+}
+
+.site-footer-heading, .site-footer-logo-text strong {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 500;
+}
+
+.site-footer-bottom {
+  border-top-color: rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 900px) {
+  .header-book-link {
+    display: none;
   }
 }
 
@@ -6016,6 +6521,40 @@ img {
 .home-page {
   overflow: hidden;
   background: var(--background, #ffffff);
+}
+
+#about,
+#rooms,
+#gallery {
+  scroll-margin-top: 24px;
+}
+
+.home-rooms-state {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.home-rooms-state p {
+  margin: 0;
+}
+
+.home-room-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.72);
+  background: #243239;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* =========================================================

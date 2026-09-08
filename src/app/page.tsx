@@ -1,35 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { useAuth } from "@/src/components/auth/AuthProvider";
-
-const roomHighlights = [
-  {
-    image: "/images/gishgum-hotel-room.jpg",
-    name: "Standard Room",
-    description: "A comfortable space for peaceful stays.",
-    price: "ETB 1,500",
-  },
-  {
-    image: "/images/gishgum-hotel-room.jpg",
-    name: "Deluxe Room",
-    description: "More space, modern comfort, and relaxation.",
-    price: "ETB 2,000",
-  },
-  {
-    image: "/images/gishgum-hotel-room.jpg",
-    name: "Executive Suite",
-    description: "Premium comfort for a memorable experience.",
-    price: "ETB 3,000",
-  },
-  {
-    image: "/images/gishgum-hotel-room.jpg",
-    name: "Family Room",
-    description: "Designed for families and shared moments.",
-    price: "ETB 2,800",
-  },
-];
+import {
+  getRooms,
+  type Room,
+} from "@/src/lib/rooms-api";
+import { formatPrice, getRoomImage } from "@/src/lib/room-utils";
 
 const experiences = [
   {
@@ -79,6 +58,41 @@ const galleryImages = [
 
 export default function HomePage() {
   const { user, isLoading } = useAuth();
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [roomsLoading, setRoomsLoading] = useState(true);
+  const [roomsError, setRoomsError] = useState('');
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadRooms() {
+      try {
+        const data = await getRooms();
+
+        if (mounted) {
+          setRooms(data.slice(0, 4));
+        }
+      } catch (error) {
+        if (mounted) {
+          setRoomsError(
+            error instanceof Error
+              ? error.message
+              : 'Unable to load rooms.',
+          );
+        }
+      } finally {
+        if (mounted) {
+          setRoomsLoading(false);
+        }
+      }
+    }
+
+    loadRooms();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <div className="home-page">
@@ -95,9 +109,9 @@ export default function HomePage() {
               <span className="home-hero-badge">WELCOME TO GISHGUM HOTEL</span>
 
               <h1 className="home-hero-title">
-                Enjoy at
+                ግሻጉም
                 <br />
-                <span>GISHAGUM</span>
+                <span>HOTEL</span>
               </h1>
 
               <p className="home-hero-description">
@@ -107,7 +121,7 @@ export default function HomePage() {
 
               <div className="home-hero-actions">
                 <Link
-                  href="/rooms"
+                  href="#rooms"
                   className="btn btn-primary btn-lg home-hero-primary"
                 >
                   Explore Our Rooms
@@ -158,38 +172,34 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* BOOKING SEARCH */}
-      <section className="home-booking-panel">
+      {/* SIGNATURE MOMENTS */}
+      <section className="home-signature-section">
         <div className="container">
-          <div className="home-booking-card">
-            <div className="home-booking-heading">
-              <span>PLAN YOUR STAY</span>
-              <strong>Find your perfect room</strong>
-            </div>
+          <div className="home-signature-intro">
+            <span className="home-section-kicker">THE GISHGUM EXPERIENCE</span>
+            <h2 className="home-editorial-heading">
+              A stay shaped around your rhythm.
+            </h2>
+            <p>
+              Slow mornings, considered spaces, and warm Ethiopian hospitality come together in every detail.
+            </p>
+          </div>
 
-            <div className="home-booking-field">
-              <span>Check-in</span>
-              <strong>Select date</strong>
-            </div>
-
-            <div className="home-booking-field">
-              <span>Check-out</span>
-              <strong>Select date</strong>
-            </div>
-
-            <div className="home-booking-field">
-              <span>Guests</span>
-              <strong>2 Guests</strong>
-            </div>
-
-            <div className="home-booking-field">
-              <span>Room type</span>
-              <strong>Any room</strong>
-            </div>
-
-            <Link href="/rooms" className="btn btn-primary home-booking-button">
-              Check Availability
-              <span aria-hidden="true">→</span>
+          <div className="home-signature-grid">
+            <Link href="#rooms" className="home-signature-card home-signature-card-tall">
+              <img src="/images/gishgum-hotel-room.jpg" alt="A calm Gishgum Hotel room" loading="lazy" />
+              <span>01 / Stay</span>
+              <strong>Rooms made for deep rest</strong>
+            </Link>
+            <Link href="#gallery" className="home-signature-card">
+              <img src="/images/gishgum-hotel-restaurant.jpg" alt="Gishgum Hotel dining" loading="lazy" />
+              <span>02 / Taste</span>
+              <strong>Gather around the table</strong>
+            </Link>
+            <Link href="#about" className="home-signature-card">
+              <img src="/images/gishgum-hotel-lobby.jpg" alt="Gishgum Hotel lobby" loading="lazy" />
+              <span>03 / Belong</span>
+              <strong>Feel instantly at home</strong>
             </Link>
           </div>
         </div>
@@ -218,7 +228,7 @@ export default function HomePage() {
                 convenient, comfortable, and memorable.
               </p>
 
-              <Link href="/rooms" className="home-text-link">
+              <Link href="#rooms" className="home-text-link">
                 Discover our rooms
                 <span aria-hidden="true">→</span>
               </Link>
@@ -241,7 +251,7 @@ export default function HomePage() {
       </section>
 
       {/* ROOMS */}
-      <section className="home-rooms section">
+      <section id="rooms" className="home-rooms section">
         <div className="container">
           <div className="home-section-heading">
             <div>
@@ -258,30 +268,62 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="home-room-grid">
-            {roomHighlights.map((room, index) => (
-              <Link key={room.name} href="/rooms" className="home-room-card">
-                <div className="home-room-image">
-                  <img src={room.image} alt={room.name} loading="lazy" />
+          {roomsLoading && (
+            <div className="home-rooms-state" aria-live="polite">
+              <span className="spinner" aria-hidden="true" />
+              <p>Discovering available rooms...</p>
+            </div>
+          )}
 
-                  <span className="home-room-number">0{index + 1}</span>
-                </div>
-
-                <div className="home-room-content">
-                  <h3>{room.name}</h3>
-                  <p>{room.description}</p>
-
-                  <div className="home-room-bottom">
-                    <span>
-                      From <strong>{room.price}</strong> / night
-                    </span>
-
-                    <span aria-hidden="true">↗</span>
-                  </div>
-                </div>
+          {!roomsLoading && roomsError && (
+            <div className="home-rooms-state" role="alert">
+              <p>{roomsError}</p>
+              <Link href="/rooms" className="home-text-link">
+                View all rooms <span aria-hidden="true">→</span>
               </Link>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {!roomsLoading && !roomsError && rooms.length === 0 && (
+            <div className="home-rooms-state">
+              <p>No rooms are currently available.</p>
+            </div>
+          )}
+
+          {!roomsLoading && !roomsError && rooms.length > 0 && (
+            <div className="home-room-grid">
+              {rooms.map((room, index) => {
+                const image = getRoomImage(room.roomType.images);
+
+                return (
+                  <Link key={room.id} href={`/rooms/${room.id}`} className="home-room-card">
+                    <div className="home-room-image">
+                      {image ? (
+                        <img src={image} alt={`${room.roomType.name} room`} loading="lazy" />
+                      ) : (
+                        <div className="home-room-placeholder">No image available</div>
+                      )}
+
+                      <span className="home-room-number">0{index + 1}</span>
+                    </div>
+
+                    <div className="home-room-content">
+                      <h3>{room.roomType.name}</h3>
+                      <p>{room.roomType.description ?? `Room ${room.roomNumber} on floor ${room.floor}.`}</p>
+
+                      <div className="home-room-bottom">
+                        <span>
+                          From <strong>{formatPrice(room.roomType.price)}</strong> / night
+                        </span>
+
+                        <span aria-hidden="true">↗</span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

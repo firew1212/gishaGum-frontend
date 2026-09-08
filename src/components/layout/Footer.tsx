@@ -43,29 +43,26 @@ export default function Footer() {
               </p>
 
               <div className="site-footer-socials">
-                <a
-                  href="#"
+                <span
                   className="site-footer-social"
                   aria-label="Facebook"
                 >
                   f
-                </a>
+                </span>
 
-                <a
-                  href="#"
+                <span
                   className="site-footer-social"
                   aria-label="Instagram"
                 >
                   ◎
-                </a>
+                </span>
 
-                <a
-                  href="#"
+                <span
                   className="site-footer-social"
                   aria-label="Telegram"
                 >
                   ↗
-                </a>
+                </span>
               </div>
             </div>
 
@@ -150,9 +147,9 @@ export default function Footer() {
           <p>© {currentYear} Gishgum Hotel. All rights reserved.</p>
 
           <div className="site-footer-bottom-links">
-            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/#about">About the hotel</Link>
 
-            <Link href="/terms">Terms & Conditions</Link>
+            <Link href="/#gallery">Gallery</Link>
           </div>
         </div>
       </div>

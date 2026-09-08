@@ -65,3 +65,46 @@ export async function getAdminRoomTypes(): Promise<RoomType[]> {
     method: 'GET',
   });
 }
+
+export interface CreateRoomTypePayload {
+  name: string;
+  description?: string;
+  price: number;
+  amenities: string[];
+  images: string[];
+}
+
+export type UpdateRoomTypePayload = Partial<CreateRoomTypePayload>;
+
+export async function createRoomType(
+  payload: CreateRoomTypePayload,
+  accessToken: string,
+): Promise<RoomType> {
+  return apiRequest<RoomType>('/room-types', {
+    method: 'POST',
+    token: accessToken,
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateRoomType(
+  roomTypeId: string,
+  payload: UpdateRoomTypePayload,
+  accessToken: string,
+): Promise<RoomType> {
+  return apiRequest<RoomType>(`/room-types/${roomTypeId}`, {
+    method: 'PATCH',
+    token: accessToken,
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteRoomType(
+  roomTypeId: string,
+  accessToken: string,
+): Promise<void> {
+  await apiRequest<unknown>(`/room-types/${roomTypeId}`, {
+    method: 'DELETE',
+    token: accessToken,
+  });
+}

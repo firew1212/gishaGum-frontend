@@ -13,6 +13,7 @@ export interface RoomType {
   price: number | string;
   amenities: string[];
   images: string[];
+  rooms?: Room[];
   createdAt?: string;
   updatedAt?: string;
 }

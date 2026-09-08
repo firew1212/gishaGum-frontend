@@ -76,6 +76,15 @@ export default function Header() {
 
           {/* Account actions */}
           <div className="site-nav-actions">
+            <Link
+              href="/rooms"
+              className="header-book-link"
+              onClick={closeMobileMenu}
+            >
+              Book your stay
+              <span aria-hidden="true">↗</span>
+            </Link>
+
             {isLoading ? (
               <span className="header-loading">
                 <span className="header-loading-dot" />

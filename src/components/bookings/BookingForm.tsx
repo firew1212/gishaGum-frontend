@@ -182,7 +182,7 @@ export default function BookingForm({ room }: BookingFormProps) {
         accessToken,
       );
 
-      window.location.href = `/bookings/${booking.id}/success`;
+      window.location.href = `/bookings/${booking.id}/payment`;
     } catch (requestError) {
       setError(
         requestError instanceof Error
